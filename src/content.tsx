@@ -18,9 +18,9 @@ export const getStyle = () => {
 }
 
 const PlasmoOverlay = () => {
-  const extensionButtonRef = useRef<HTMLDivElement>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-  let formContainer: HTMLElement | null;
+  const extensionButtonRef = useRef<HTMLDivElement>(null);
+  const inputElementRef = useRef<HTMLDivElement | null>(null);
 
   const onClose = () => {
     setIsModalOpen(false);
@@ -39,34 +39,26 @@ const PlasmoOverlay = () => {
   }
 
   useEffect(() => {
-    formContainer = document.querySelector(".msg-form__contenteditable");
+    const intervalId = setInterval(() => {
+      if (!inputElementRef?.current) {
+        const inputElement = document.querySelector(".msg-form__contenteditable");
+        inputElementRef.current = inputElement as HTMLDivElement;
+        extensionButtonRef.current!.onclick = openModal;
+        inputElementRef?.current?.parentElement.appendChild(extensionButtonRef.current!);
+      } else {
+        clearInterval(intervalId);
+      }
+    }, 500);
 
-    if (formContainer && extensionButtonRef?.current) {
-      extensionButtonRef.current!.onclick = openModal;
-      formContainer.parentElement?.appendChild(extensionButtonRef.current!);
+    return () => {
+      clearInterval(intervalId);
     }
-
-    // return () => {
-    //   document.removeEventListener("click", handleInteraction);
-    // };
-  }, [extensionButtonRef?.current]);
-
-  formContainer?.addEventListener("focus", () => {
-    if (extensionButtonRef?.current) {
-      extensionButtonRef.current.style.display = "none";
-    }
-  });
-
-  formContainer?.addEventListener("blur", () => {
-    if (extensionButtonRef?.current) {
-      extensionButtonRef.current.style.display = "flex";
-    }
-  });
+  }, []);
 
   return (
     <div className="w-full relative">
       <div
-        className="hidden z-50 w-10 h-10 bg-white shadow-lg justify-center items-center absolute bottom-4 right-4 rounded-full cursor-pointer"
+        className={"flex z-50 w-10 h-10 bg-white shadow-lg justify-center items-center absolute bottom-4 right-4 rounded-full cursor-pointer"}
         onClick={openModal}
         ref={extensionButtonRef}
       >
