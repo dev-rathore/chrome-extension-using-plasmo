@@ -2,6 +2,8 @@
 
 ## Video Demonstration
 
+https://github.com/dev-rathore/chrome-extension-using-plasmo/assets/59788555/44455b1c-f535-4117-908b-a858aeff6c6c
+
 ## Getting Started
 
 1. Install dependencies: `pnpm i` or `pnp i`
